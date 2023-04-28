@@ -44,13 +44,13 @@ function mainMenu() {
         getProductsCLI(rl, mainMenu);
         break;
       case '6':
-        getCartByUser(currentUser(), rl, mainMenu);
+        getCartByUser(getcurrentUser(), rl, mainMenu);
         break;
       case '7':
-        addItemToCart(currentUser(), rl, mainMenu);
+        addItemToCart(getcurrentUser(), rl, mainMenu);
         break;
       case '8':
-        removeCartItem(currentUser(), rl, mainMenu);
+        removeCartItem(getcurrentUser(), rl, mainMenu);
         break;
       case '9':
         quit();
