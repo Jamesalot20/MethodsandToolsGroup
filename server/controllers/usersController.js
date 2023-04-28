@@ -3,6 +3,10 @@ const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
 const readline = require('readline');
 
+const rl = readline.createInterface({
+  input: process.stdin,
+  output: process.stdout,
+});
 
 async function registerUser(r1) {
   rl.question('Enter your email: ', async (email) => {
