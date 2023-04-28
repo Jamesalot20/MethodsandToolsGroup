@@ -52,7 +52,7 @@ async function getProductsCLI(rl, mainMenu) {
         console.error('Error fetching products:', error);
       }
       // Call your mainMenu function here to return to the main menu
-      mainMenu();
+      //mainMenu();
     });
   });
 }
