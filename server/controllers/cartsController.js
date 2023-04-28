@@ -20,7 +20,7 @@ async function getCartByUser(rl, mainMenu) {
   mainMenu();
 }
 
-async function addItemToCart(currentUser, rl, mainMenu) { // <-- Changed this line
+async function addItemToCart(getcurrentUser(), rl, mainMenu) { // <-- Changed this line
   try {
     rl.question('Enter the product ID: ', async (productId) => {
       rl.question('Enter the quantity: ', async (quantity) => {
