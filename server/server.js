@@ -3,7 +3,7 @@ const dotenv = require('dotenv');
 const connectToDB = require('./db');
 const { registerUser, loginUser, logoutUser, deleteUser } = require('./controllers/usersController');
 const { getProductsCLI } = require('./controllers/productsController');
-const { getCartByUser, addItemToCart, removeCartItem } = require('./controllers/cartController');
+const { getCartByUser, addItemToCart, removeCartItem } = require('./controllers/cartsController');
 
 // Load environment variables
 dotenv.config();
