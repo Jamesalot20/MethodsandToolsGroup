@@ -1,5 +1,6 @@
 const Product = require('../models/Product');
 const mongoose = require('mongoose');
+const { mainMenu } = require('../server');
 
 exports.getProducts = async (req, res) => {
   try {
@@ -52,7 +53,7 @@ async function getProductsCLI(rl, mainMenu) {
         console.error('Error fetching products:', error);
       }
       // Call your mainMenu function here to return to the main menu
-      //mainMenu();
+      mainMenu();
     });
   });
 }
