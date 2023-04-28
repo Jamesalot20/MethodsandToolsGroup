@@ -41,8 +41,11 @@ function mainMenu() {
       default:
         console.log('Invalid choice. Please try again.\n');
         mainMenu();
+        askForChoice();
     }
   });
+}
+askForChoice();
 }
 
 function quit() {
