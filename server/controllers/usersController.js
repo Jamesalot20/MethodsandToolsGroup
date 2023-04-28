@@ -28,22 +28,7 @@ exports.registerUser = async (req, res) => {
   res.status(500).json({ message: 'Server error.', error });
   }
 };
-exports.getUserByEmail = async (req, res) => {
-  try {
-    const allUsers = await User.find({});
-    
-    const user = await User.findOne({ email: req.params.email });
-    
 
-    if (!user) {
-      res.status(404).json({ message: 'User not found' });
-    } else {
-      res.status(200).json(user);
-    }
-  } catch (error) {
-    res.status(500).json({ error: 'An error occurred while fetching the user.' });
-  }
-};
 exports.loginUser = async (req, res) => {
   try {
     const { email, password } = req.body;
@@ -73,9 +58,7 @@ exports.logoutUser = (req, res) => {
 };
 
 
-exports.protectedRoute = (req, res) => {
-  res.status(200).json({ message: 'This is a protected route.' });
-};
+
 
 exports.deleteUser = async (req, res) => {
   try {
@@ -92,15 +75,5 @@ exports.deleteUser = async (req, res) => {
   } catch (error) {
     
     res.status(500).json({ message: 'Server error.' });
-  }
-};
-
-exports.getUsers = async (req, res) => {
-  try {
-    const users = await User.find();
-    res.status(200).json({ success: true, data: users });
-  } catch (error) {
-    console.error(error);
-    res.status(500).json({ success: false, message: 'Unable to get users' });
   }
 };
