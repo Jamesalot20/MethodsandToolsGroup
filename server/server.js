@@ -3,6 +3,7 @@ const dotenv = require('dotenv');
 const connectToDB = require('./db');
 const { registerUser, loginUser, logoutUser, deleteUser } = require('./controllers/usersController');
 const { getProductsCLI } = require('./controllers/productsController');
+const { getCartByUser, addItemToCart, removeCartItem } = require('./controllers/cartController');
 
 // Load environment variables
 dotenv.config();
@@ -20,7 +21,10 @@ function mainMenu() {
   console.log('3. Logout');
   console.log('4. Delete account');
   console.log('5. View products');
-  console.log('6. Quit');
+  console.log('6. View cart');
+  console.log('7. Add item to cart');
+  console.log('8. Remove item from cart');
+  console.log('9. Quit');
 
   rl.question('\nEnter your choice: ', (choice) => {
     switch (choice) {
@@ -40,6 +44,15 @@ function mainMenu() {
         getProductsCLI(rl, mainMenu);
         break;
       case '6':
+        getCartByUser(rl, mainMenu);
+        break;
+      case '7':
+        addItemToCart(rl, mainMenu);
+        break;
+      case '8':
+        removeCartItem(rl, mainMenu);
+        break;
+      case '9':
         quit();
         break;
       default:
@@ -49,6 +62,7 @@ function mainMenu() {
   });
 }
 exports.mainMenu = mainMenu;
+
 function quit() {
   console.log('Goodbye!');
   rl.close();
