@@ -1,46 +1,48 @@
-const express = require('express');
-const cors = require('cors');
+const readline = require('readline');
 const dotenv = require('dotenv');
 const connectToDB = require('./db');
-
-// Import routes
-const userRoutes = require('./routes/userRoutes');
-const productRoutes = require('./routes/productRoutes');
-const orderRoutes = require('./routes/orderRoutes');
-const cartRoutes = require('./routes/cartRoutes');
-const shippingRoutes = require('./routes/shippingRoutes');
-
-// Import error middleware
-const errorMiddleware = require('./middlewares/errorMiddleware');
 
 // Load environment variables
 dotenv.config();
 
-// Initialize Express
-const app = express();
-
-// Middleware
-app.use(cors());
-app.use(express.json());
-app.use(express.urlencoded({ extended: false }));
-
-// Routes
-app.use('/api/users', userRoutes);
-app.use('/api/products', productRoutes);
-app.use('/api/orders', orderRoutes);
-app.use('/api/carts', cartRoutes);
-app.use('/api/shipping', shippingRoutes);
-
-// Error handling middleware
-app.use(errorMiddleware.errorHandler);
-
-// Start server
-const PORT = process.env.PORT || 5000;
-connectToDB().then(() => {
-  app.listen(PORT, () => {
-    console.log(`Server is running on port ${PORT}`);
-  });
-}).catch((error) => {
-  console.error('Failed to connect to the database:', error);
+const rl = readline.createInterface({
+  input: process.stdin,
+  output: process.stdout,
 });
-module.exports = app;
+
+function mainMenu() {
+    console.log('\nWelcome to TechTonic');
+    console.log('Please choose an option:');
+    console.log('1. Register');
+    console.log('2. Login');
+    console.log('3. Quit');
+  
+    rl.question('\nEnter your choice: ', (choice) => {
+      switch (choice) {
+        case '1':
+          registerUser();
+          break;
+        case '2':
+          loginUser();
+          break;
+        case '3':
+          quit();
+          break;
+        default:
+          console.log('Invalid choice. Please try again.\n');
+          mainMenu();
+      }
+    });
+  
+}
+
+// ... Implement other functions like registerUser, loginUser, etc.
+
+connectToDB()
+  .then(() => {
+    console.log(`Connected to the database`);
+    mainMenu();
+  })
+  .catch((error) => {
+    console.error('Failed to connect to the database:', error);
+  });
