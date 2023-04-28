@@ -20,14 +20,14 @@ async function getCartByUser(rl, mainMenu) {
   mainMenu();
 }
 
-async function addItemToCart(getcurrentUser(), rl, mainMenu) { // <-- Changed this line
+async function addItemToCart(currentUser, rl, mainMenu) { // <-- Changed this line
   try {
     rl.question('Enter the product ID: ', async (productId) => {
       rl.question('Enter the quantity: ', async (quantity) => {
-        let cart = await Cart.findOne({ user: getCurrentUser()._id });
+        let cart = await Cart.findOne({ user: currentUser._id });
 
         if (!cart) {
-          cart = new Cart({ user: getCurrentUser()._id, items: [] });
+          cart = new Cart({ user: currentUser._id, items: [] });
         }
 
         const itemIndex = cart.items.findIndex((item) => item.product.toString() === productId);
