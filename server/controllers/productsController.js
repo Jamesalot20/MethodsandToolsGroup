@@ -24,7 +24,7 @@ exports.getProducts = async (req, res) => {
 };
 
 // Function to handle command line interface for getting products
-async function getProductsCLI(rl) {
+async function getProductsCLI(rl, mainMenu) {
   rl.question('Enter a search keyword (leave empty for no keyword): ', async (search) => {
     rl.question('Enter a category (leave empty for no category): ', async (category) => {
       try {
