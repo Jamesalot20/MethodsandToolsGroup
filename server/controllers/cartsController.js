@@ -1,12 +1,12 @@
 const Cart = require('../models/Cart');
-const { currentUser } = require('./usersController');
+const { getCurrentUser } = require('./usersController');
 
 async function getCartByUser(rl, mainMenu) {
   try {
-    let cart = await Cart.findOne({ user: currentUser._id }).populate('items.product');
+    let cart = await Cart.findOne({ user: getCurrentUser()._id }).populate('items.product');
 
     if (!cart) {
-      cart = new Cart({ user: currentUser._id, items: [] });
+      cart = new Cart({ user: getCurrentUser()._id, items: [] });
     }
 
     console.log('Cart items:');
@@ -20,14 +20,14 @@ async function getCartByUser(rl, mainMenu) {
   mainMenu();
 }
 
-async function addItemToCart(currentUser, rl, mainMenu) {
+async function addItemToCart(currentUser, rl, mainMenu) { // <-- Changed this line
   try {
     rl.question('Enter the product ID: ', async (productId) => {
       rl.question('Enter the quantity: ', async (quantity) => {
-        let cart = await Cart.findOne({ user: currentUser._id });
+        let cart = await Cart.findOne({ user: getCurrentUser()._id });
 
         if (!cart) {
-          cart = new Cart({ user: currentUser._id, items: [] });
+          cart = new Cart({ user: getCurrentUser()._id, items: [] });
         }
 
         const itemIndex = cart.items.findIndex((item) => item.product.toString() === productId);
@@ -52,7 +52,7 @@ async function addItemToCart(currentUser, rl, mainMenu) {
 async function removeCartItem(rl, mainMenu) {
   try {
     rl.question('Enter the product ID: ', async (productId) => {
-      const cart = await Cart.findOne({ user: currentUser._id });
+      const cart = await Cart.findOne({ user: getCurrentUser()._id });
 
       if (!cart) {
         console.log('Cart not found.');
