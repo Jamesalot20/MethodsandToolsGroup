@@ -48,7 +48,7 @@ function mainMenu() {
     }
   });
 }
-
+exports.mainMenu = mainMenu;
 function quit() {
   console.log('Goodbye!');
   rl.close();
