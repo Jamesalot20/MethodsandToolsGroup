@@ -1,82 +1,79 @@
 const Cart = require('../models/Cart');
+const { currentUser } = require('./usersController');
 
-exports.getCartByUser = async (req, res) => {
+async function getCartByUser(rl, mainMenu) {
   try {
-    let cart = await Cart.findOne({ user: req.user.userId }).populate('items.product');
+    let cart = await Cart.findOne({ user: currentUser._id }).populate('items.product');
 
     if (!cart) {
-      cart = new Cart({ user: req.user.userId, items: [] });
+      cart = new Cart({ user: currentUser._id, items: [] });
     }
 
-    res.status(200).json(cart);
+    console.log('Cart items:');
+    cart.items.forEach((item) => {
+      console.log(`- ${item.product.name} (Quantity: ${item.quantity})`);
+    });
   } catch (error) {
-    res.status(500).json({ message: 'Server error.' });
+    console.error('Server error.', error);
   }
-};
 
-exports.addItemToCart = async (req, res) => {
+  mainMenu();
+}
+
+async function addItemToCart(rl, mainMenu) {
   try {
-    const { productId, quantity } = req.body;
-    let cart = await Cart.findOne({ user: req.user.userId });
+    rl.question('Enter the product ID: ', async (productId) => {
+      rl.question('Enter the quantity: ', async (quantity) => {
+        let cart = await Cart.findOne({ user: currentUser._id });
 
-    if (!cart) {
-      cart = new Cart({ user: req.user.userId, items: [] });
-    }
+        if (!cart) {
+          cart = new Cart({ user: currentUser._id, items: [] });
+        }
 
-    const itemIndex = cart.items.findIndex((item) => item.product.toString() === productId);
+        const itemIndex = cart.items.findIndex((item) => item.product.toString() === productId);
 
-    if (itemIndex >= 0) {
-      cart.items[itemIndex].quantity += quantity;
-    } else {
-      cart.items.push({ product: productId, quantity });
-    }
+        if (itemIndex >= 0) {
+          cart.items[itemIndex].quantity += parseInt(quantity);
+        } else {
+          cart.items.push({ product: productId, quantity: parseInt(quantity) });
+        }
 
-    await cart.save();
-    res.status(200).json({ message: 'Product added to cart successfully.', cart });
+        await cart.save();
+        console.log('Product added to cart successfully.');
+        mainMenu();
+      });
+    });
   } catch (error) {
-     console.error(error);
-    res.status(500).json({ message: 'Server error.' });
+    console.error('Server error.', error);
+    mainMenu();
   }
-};
+}
 
-exports.updateCartItem = async (req, res) => {
+async function removeCartItem(rl, mainMenu) {
   try {
-    const { productId, quantity } = req.body;
-    const cart = await Cart.findOne({ user: req.user.userId });
+    rl.question('Enter the product ID: ', async (productId) => {
+      const cart = await Cart.findOne({ user: currentUser._id });
 
-    if (!cart) {
-      return res.status(404).json({ message: 'Cart not found.' });
-    }
+      if (!cart) {
+        console.log('Cart not found.');
+        mainMenu();
+        return;
+      }
 
-    const itemIndex = cart.items.findIndex((item) => item.product.toString() === productId);
+      cart.items = cart.items.filter((item) => item.product.toString() !== productId);
 
-    if (itemIndex >= 0) {
-      cart.items[itemIndex].quantity = quantity;
-    } else {
-      return res.status(404).json({ message: 'Item not found in cart.' });
-    }
-
-    await cart.save();
-    res.status(200).json({ message: 'Item updated in cart.', cart });
+      await cart.save();
+      console.log('Item removed from cart.');
+      mainMenu();
+    });
   } catch (error) {
-    res.status(500).json({ message: 'Server error.' });
+    console.error('Server error.', error);
+    mainMenu();
   }
-};
+}
 
-exports.removeCartItem = async (req, res) => {
-  try {
-    const { productId } = req.params;
-    const cart = await Cart.findOne({ user: req.user.userId });
-
-    if (!cart) {
-      return res.status(404).json({ message: 'Cart not found.' });
-    }
-
-    cart.items = cart.items.filter((item) => item.product.toString() !== productId);
-
-    await cart.save();
-    res.status(200).json({ message: 'Item removed from cart.', cart });
-  } catch (error) {
-    res.status(500).json({ message: 'Server error.' });
-  }
+module.exports = {
+  getCartByUser,
+  addItemToCart,
+  removeCartItem,
 };
