@@ -70,21 +70,3 @@ exports.getBuyerOrderHistory = async (req, res) => {
     res.status(500).json({ error: 'An error occurred while fetching the order history.' });
   }
 };
-
-exports.returnOrderItem = async (req, res) => {
-  try {
-    const order = await Order.findOneAndUpdate(
-      { _id: req.params.orderId },
-      { $set: { 'items.$[].status': 'returned' } },
-      { new: true }
-    );
-
-    if (!order) {
-      res.status(404).json({ error: 'Order not found.' });
-    } else {
-      res.status(200).json(order);
-    }
-  } catch (error) {
-    res.status(500).json({ error: 'An error occurred while returning the item.' });
-  }
-};
