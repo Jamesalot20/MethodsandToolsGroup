@@ -67,9 +67,8 @@ async function loginUser(rl, mainMenu) {
 
 // ... Keep other functions like logoutUser and deleteUser as is, but modify them to work with the command-line interface
 
-
-
 let currentUser = null; // global variable to store the current user's information
+
 
 async function logoutUser() {
   // Since JWT tokens are stateless, you cannot invalidate the token on the server-side.
@@ -115,3 +114,4 @@ exports.registerUser = registerUser;
 exports.loginUser = loginUser;
 exports.logoutUser = logoutUser;
 exports.deleteUser = deleteUser;
+exports.currentUser = currentUser;
