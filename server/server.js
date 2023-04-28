@@ -6,10 +6,7 @@ const { registerUser, loginUser, logoutUser, deleteUser } = require('./controlle
 // Load environment variables
 dotenv.config();
 
-const rl = readline.createInterface({
-  input: process.stdin,
-  output: process.stdout,
-});
+
 
 function mainMenu() {
   console.log('\nWelcome to TechTonic');
