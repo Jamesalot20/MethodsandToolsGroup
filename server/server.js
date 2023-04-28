@@ -25,10 +25,10 @@ function mainMenu() {
   rl.question('\nEnter your choice: ', (choice) => {
     switch (choice) {
       case '1':
-        registerUser(rl);
+        registerUser(rl, mainMenu);
         break;
       case '2':
-        loginUser(rl);
+        loginUser(rl, mainMenu);
         break;
       case '3':
         logoutUser();
