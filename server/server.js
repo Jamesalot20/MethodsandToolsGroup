@@ -2,7 +2,7 @@ const readline = require('readline');
 const dotenv = require('dotenv');
 const connectToDB = require('./db');
 const { registerUser, loginUser, logoutUser, deleteUser } = require('./controllers/usersController');
-const usersController = require('./controllers/usersController');
+//const usersController = require('./controllers/usersController');
 
 // Load environment variables
 dotenv.config();
@@ -24,10 +24,10 @@ function mainMenu() {
   rl.question('\nEnter your choice: ', (choice) => {
     switch (choice) {
       case '1':
-        usersController.registerUser(rl);
+        registerUser(rl);
         break;
       case '2':
-        usersController.loginUser(rl);
+        loginUser(rl);
         break;
       case '3':
         logoutUser();
