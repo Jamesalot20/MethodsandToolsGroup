@@ -1,6 +1,6 @@
 const Product = require('../models/Product');
 const mongoose = require('mongoose');
-const { mainMenu } = require('../server');
+//const { mainMenu } = require('../server');
 
 exports.getProducts = async (req, res) => {
   try {
