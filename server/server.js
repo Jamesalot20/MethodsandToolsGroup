@@ -2,6 +2,7 @@ const readline = require('readline');
 const dotenv = require('dotenv');
 const connectToDB = require('./db');
 const { registerUser, loginUser, logoutUser, deleteUser } = require('./controllers/usersController');
+const { getProductsCLI } = require('./controllers/productsController');
 
 // Load environment variables
 dotenv.config();
@@ -18,7 +19,8 @@ function mainMenu() {
   console.log('2. Login');
   console.log('3. Logout');
   console.log('4. Delete account');
-  console.log('5. Quit');
+  console.log('5. View products');
+  console.log('6. Quit');
 
   rl.question('\nEnter your choice: ', (choice) => {
     switch (choice) {
@@ -35,6 +37,9 @@ function mainMenu() {
         deleteUser();
         break;
       case '5':
+        getProductsCLI(rl);
+        break;
+      case '6':
         quit();
         break;
       default:
