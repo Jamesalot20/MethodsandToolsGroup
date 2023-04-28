@@ -12,6 +12,20 @@ const rl = readline.createInterface({
   output: process.stdout,
 });
 
+const readline = require('readline');
+const dotenv = require('dotenv');
+const connectToDB = require('./db');
+const { registerUser, loginUser, logoutUser, deleteUser } = require('./controllers/usersController');
+//const usersController = require('./controllers/usersController');
+
+// Load environment variables
+dotenv.config();
+
+const rl = readline.createInterface({
+  input: process.stdin,
+  output: process.stdout,
+});
+
 function mainMenu() {
   console.log('\nWelcome to TechTonic');
   console.log('Please choose an option:');
@@ -47,6 +61,20 @@ function mainMenu() {
 }
 askForChoice();
 }
+
+function quit() {
+  console.log('Goodbye!');
+  rl.close();
+}
+
+connectToDB()
+  .then(() => {
+    console.log(`Connected to the database`);
+    mainMenu();
+  })
+  .catch((error) => {
+    console.error('Failed to connect to the database:', error);
+  });
 
 function quit() {
   console.log('Goodbye!');
