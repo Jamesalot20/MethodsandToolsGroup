@@ -1,7 +1,7 @@
 const readline = require('readline');
 const dotenv = require('dotenv');
 const connectToDB = require('./db');
-const { registerUser, loginUser, logoutUser, deleteUser } = require('./controllers/usersController');
+const { registerUser, loginUser, logoutUser, deleteUser currentUser } = require('./controllers/usersController');
 const { getProductsCLI } = require('./controllers/productsController');
 const { getCartByUser, addItemToCart, removeCartItem } = require('./controllers/cartsController');
 
@@ -44,13 +44,13 @@ function mainMenu() {
         getProductsCLI(rl, mainMenu);
         break;
       case '6':
-        getCartByUser(rl, mainMenu);
+        getCartByUser(currentUser, rl, mainMenu);
         break;
       case '7':
-        addItemToCart(rl, mainMenu);
+        addItemToCart(currentUser, rl, mainMenu);
         break;
       case '8':
-        removeCartItem(rl, mainMenu);
+        removeCartItem(currentUser, rl, mainMenu);
         break;
       case '9':
         quit();
