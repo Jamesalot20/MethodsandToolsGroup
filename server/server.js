@@ -37,7 +37,7 @@ function mainMenu() {
         deleteUser();
         break;
       case '5':
-        getProductsCLI(rl);
+        getProductsCLI(rl, mainMenu);
         break;
       case '6':
         quit();
