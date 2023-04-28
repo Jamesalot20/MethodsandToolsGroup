@@ -3,7 +3,7 @@ const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
 
 
-async function registerUser(rl) {
+async function registerUser(rl, mainMenu) {
   rl.question('Enter your email: ', async (email) => {
     rl.question('Enter your password: ', async (password) => {
       try {
@@ -34,7 +34,7 @@ async function registerUser(rl) {
   });
 }
 
-async function loginUser(rl) {
+async function loginUser(rl, mainMenu) {
   rl.question('Enter your email: ', async (email) => {
     rl.question('Enter your password: ', async (password) => {
       try {
