@@ -61,7 +61,7 @@ async function loginUser() {
         const token = jwt.sign({ userId: user._id, role: user.role }, process.env.JWT_SECRET, { expiresIn: '400h' });
 
         console.log('Login successful.');
-        // Store the token, userId, and role somewhere (e.g., in a global variable) to use it in other functions
+        currentUser = { _id: user._id, email: user.email, role: user.role }; // Store the user's information
       } catch (error) {
         console.error('Server error.', error);
       }
