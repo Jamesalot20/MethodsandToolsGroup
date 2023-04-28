@@ -1,7 +1,7 @@
 const readline = require('readline');
 const dotenv = require('dotenv');
 const connectToDB = require('./db');
-const { registerUser, loginUser, logoutUser, deleteUser currentUser } = require('./controllers/usersController');
+const { registerUser, loginUser, logoutUser, deleteUser, currentUser } = require('./controllers/usersController');
 const { getProductsCLI } = require('./controllers/productsController');
 const { getCartByUser, addItemToCart, removeCartItem } = require('./controllers/cartsController');
 
