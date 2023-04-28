@@ -1,79 +1,122 @@
 const User = require('../models/User');
 const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
+const readline = require('readline');
 
-exports.registerUser = async (req, res) => {
-  try {
-    const { email, password, role } = req.body;
-    const existingUser = await User.findOne({ email });
+const rl = readline.createInterface({
+  input: process.stdin,
+  output: process.stdout,
+});
 
-    if (existingUser) {
-      return res.status(409).json({ message: 'User with this email already exists.' });
-    }
+async function registerUser() {
+  rl.question('Enter your email: ', async (email) => {
+    rl.question('Enter your password: ', async (password) => {
+      try {
+        const existingUser = await User.findOne({ email });
 
-    const salt = await bcrypt.genSalt(10);
-    const hashedPassword = await bcrypt.hash(password, salt);
+        if (existingUser) {
+          console.log('User with this email already exists.');
+          mainMenu();
+          return;
+        }
 
-    const newUser = new User({
-      email,
-      password: hashedPassword,
-      role: role || 'buyer', // Set role from request body, default to 'buyer'
+        const salt = await bcrypt.genSalt(10);
+        const hashedPassword = await bcrypt.hash(password, salt);
+
+        const newUser = new User({
+          email,
+          password: hashedPassword,
+          role: 'buyer', // Set default role to 'buyer'
+        });
+
+        await newUser.save();
+        console.log('User successfully registered.');
+      } catch (error) {
+        console.error("Error in registerUser:", error);
+      }
+      mainMenu();
     });
+  });
+}
 
-    await newUser.save();
-    res.status(201).json({ message: 'User successfully registered.' });
+async function loginUser() {
+  rl.question('Enter your email: ', async (email) => {
+    rl.question('Enter your password: ', async (password) => {
+      try {
+        const user = await User.findOne({ email });
 
-  } catch (error) {
-    console.error("Error in registerUser:", error);
-  res.status(500).json({ message: 'Server error.', error });
-  }
-};
+        if (!user) {
+          console.log('User not found.');
+          mainMenu();
+          return;
+        }
 
-exports.loginUser = async (req, res) => {
-  try {
-    const { email, password } = req.body;
-    const user = await User.findOne({ email });
+        const isPasswordValid = await bcrypt.compare(password, user.password);
+        if (!isPasswordValid) {
+          console.log('Invalid password.');
+          mainMenu();
+          return;
+        }
 
-    if (!user) {
-      return res.status(404).json({ message: 'User not found.' });
-    }
+        const token = jwt.sign({ userId: user._id, role: user.role }, process.env.JWT_SECRET, { expiresIn: '400h' });
 
-    const isPasswordValid = await bcrypt.compare(password, user.password);
-    if (!isPasswordValid) {
-      return res.status(401).json({ message: 'Invalid password.' });
-    }
-    const token = jwt.sign({ userId: user._id, role: user.role }, process.env.JWT_SECRET, { expiresIn: '400h' });
-    
-    res.status(200).json({ message: 'Login successful.', token, userId: user._id, role: user.role });
+        console.log('Login successful.');
+        // Store the token, userId, and role somewhere (e.g., in a global variable) to use it in other functions
+      } catch (error) {
+        console.error('Server error.', error);
+      }
+      mainMenu();
+    });
+  });
+}
 
-  } catch (error) {
-    res.status(500).json({ message: 'Server error.' });
-  }
-};
+// ... Keep other functions like logoutUser and deleteUser as is, but modify them to work with the command-line interface
 
-exports.logoutUser = (req, res) => {
+
+
+let currentUser = null; // global variable to store the current user's information
+
+async function logoutUser() {
   // Since JWT tokens are stateless, you cannot invalidate the token on the server-side.
   // To "log out" a user, simply remove the token from the client-side (e.g., delete it from local storage).
-  res.status(200).json({ message: 'Logout successful.' });
-};
+  currentUser = null;
+  console.log('Logout successful.');
+  mainMenu();
+}
 
-
-
-
-exports.deleteUser = async (req, res) => {
-  try {
-    const { email } = req.params;
-    const user = await User.findOneAndDelete({ email });
-
-    if (!user) {
-
-      return res.status(404).json({ message: 'User not found.' });
-    }
-
-    res.status(200).json({ message: 'User account deleted successfully.' });
-
-  } catch (error) {
-    
-    res.status(500).json({ message: 'Server error.' });
+async function deleteUser() {
+  if (!currentUser) {
+    console.log('You must be logged in to delete your account.');
+    mainMenu();
+    return;
   }
-};
+
+  rl.question('Are you sure you want to delete your account? (yes/no): ', async (answer) => {
+    if (answer.toLowerCase() === 'yes') {
+      try {
+        const user = await User.findOneAndDelete({ email: currentUser.email });
+
+        if (!user) {
+          console.log('User not found.');
+          mainMenu();
+          return;
+        }
+
+        console.log('User account deleted successfully.');
+        currentUser = null;
+      } catch (error) {
+        console.error('Server error.', error);
+      }
+    } else {
+      console.log('Account deletion cancelled.');
+    }
+    mainMenu();
+  });
+}
+
+
+
+exports.registerUser = registerUser;
+exports.loginUser = loginUser;
+exports.logoutUser = logoutUser;
+exports.deleteUser = deleteUser;
