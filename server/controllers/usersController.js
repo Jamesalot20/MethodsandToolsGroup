@@ -34,7 +34,7 @@ async function registerUser(rl, callback) {
   });
 }
 
-async function loginUser(rl, callback) {
+async function loginUser(rl, callback, mainMenu) {
   rl.question('Enter your email: ', async (email) => {
     rl.question('Enter your password: ', async (password) => {
       try {
@@ -42,14 +42,14 @@ async function loginUser(rl, callback) {
 
         if (!user) {
           console.log('User not found.');
-          callback();
+          callback(mainMenu, null);
           return;
         }
 
         const isPasswordValid = await bcrypt.compare(password, user.password);
         if (!isPasswordValid) {
           console.log('Invalid password.');
-          mainMenu();
+          callback(mainMenu, null);
           return;
         }
 
@@ -57,10 +57,11 @@ async function loginUser(rl, callback) {
 
         console.log('Login successful.');
         currentUser = { _id: user._id, email: user.email, role: user.role }; // Store the user's information
+        callback(null, secondMenu);
       } catch (error) {
         console.error('Server error.', error);
+        callback(mainMenu, null);
       }
-      callback();
     });
   });
 }
