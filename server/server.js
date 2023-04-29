@@ -5,6 +5,7 @@ const { registerUser, loginUser, logoutUser, deleteUser, getCurrentUser } = requ
 const { getProductsCLI } = require('./controllers/productsController');
 const { getCartByUser, addItemToCart, removeCartItem, checkout } = require('./controllers/cartsController');
 const ordersController = require('./controllers/ordersController'); // Added import for ordersController
+const shippingsController = require('./controllers/shippingsController'); // Added import for shippingsController
 // Load environment variables
 dotenv.config();
 
@@ -66,6 +67,7 @@ function secondMenu() {
         secondMenu();
         break;
       case '5':
+        editShippingInfo();
         break;
       case '6':
         deleteUser();
@@ -103,7 +105,54 @@ function mainMenu() {
   });
 }
 exports.mainMenu = mainMenu;
+async function editShippingInfo() {
+  const currentUser = getCurrentUser();
+  const shippingAddresses = await shippingsController.getShippingByUser(currentUser);
 
+  if (!shippingAddresses) {
+    console.log("No shipping addresses found for this user.");
+  } else {
+    console.log("Current shipping address(es):");
+    console.log(shippingAddresses);
+  }
+
+  console.log('\nChoose an option:');
+  console.log('1. Create a new shipping address');
+  console.log('2. Edit an existing shipping address');
+  console.log('3. Go back');
+
+  rl.question('\nEnter your choice: ', async (choice) => {
+    switch (choice) {
+      case '1':
+        // Get user input for the new shipping address
+        // Example:
+        rl.question('Enter full name: ', async (fullName) => {
+          const shippingData = { fullName };
+
+          // Add all the fields, then call the createShipping function
+          const newShipping = await shippingsController.createShipping(currentUser, shippingData);
+          if (newShipping) {
+            console.log('Shipping address created successfully.');
+            console.log(newShipping);
+          } else {
+            console.log('Error creating shipping address.');
+          }
+
+          secondMenu();
+        });
+        break;
+      case '2':
+        // Choose the shipping address to edit
+        // Add a loop to handle user input and validation
+        // Then, edit the chosen shipping address
+        // You can reuse the code from the previous example to edit the shipping address
+        break;
+      case '3':
+      default:
+        secondMenu();
+    }
+  });
+}
 function quit() {
   console.log('Goodbye!');
   rl.close();
