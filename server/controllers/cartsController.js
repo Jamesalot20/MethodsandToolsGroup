@@ -1,7 +1,7 @@
 const Cart = require('../models/Cart');
 const { getCurrentUser } = require('./usersController');
 
-async function getCartByUser(rl, mainMenu) {
+async function getCartByUser(currentUser, rl, mainMenu) {
   try {
     const currentUser = getCurrentUser();
     if (!currentUser) {
