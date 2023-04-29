@@ -95,9 +95,6 @@ function mainMenu() {
       case '3':
         quit();
         break;
-      case '10':
-        checkout(rl, mainMenu);
-        break;
       default:
         console.log('Invalid choice. Please try again.\n');
         mainMenu();
