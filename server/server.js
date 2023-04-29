@@ -6,6 +6,7 @@ const { getProductsCLI } = require('./controllers/productsController');
 const { getCartByUser, addItemToCart, removeCartItem, checkout } = require('./controllers/cartsController');
 const ordersController = require('./controllers/ordersController'); // Added import for ordersController
 const shippingsController = require('./controllers/shippingsController'); // Added import for shippingsController
+const paymentsController = require('./controllers/paymentsController');
 // Load environment variables
 dotenv.config();
 
@@ -67,7 +68,7 @@ function secondMenu() {
         secondMenu();
         break;
       case '5':
-        editShippingInfo();
+        editAccountOptions();
         break;
       case '6':
         deleteUser();
@@ -90,15 +91,8 @@ function mainMenu() {
   rl.question('\nEnter your choice: ', (choice) => {
     switch (choice) {
       case '1':
-        loginUser(rl, (err, menu) => {
-          if (err) {
-            console.error(err);
-            mainMenu();
-          } else {
-            menu();
-          }
-        }, mainMenu);
-        break;      
+        loginUser(rl, secondMenu);
+        break;
       case '2':
         registerUser(rl, secondMenu);
         break;
@@ -112,7 +106,7 @@ function mainMenu() {
   });
 }
 exports.mainMenu = mainMenu;
-async function editShippingInfo() {
+async function editAccountOptions() {
   const currentUser = getCurrentUser();
   const shippingAddresses = await shippingsController.getShippingByUser(currentUser);
 
@@ -126,7 +120,8 @@ async function editShippingInfo() {
   console.log('\nChoose an option:');
   console.log('1. Create a new shipping address');
   console.log('2. Edit an existing shipping address');
-  console.log('3. Go back');
+  console.log('3. Create new payment information');
+  console.log('4. Go back');
 
   rl.question('\nEnter your choice: ', async (choice) => {
     switch (choice) {
@@ -170,7 +165,32 @@ async function editShippingInfo() {
         // Then, edit the chosen shipping address
         // You can reuse the code from the previous example to edit the shipping address
         break;
-      case '3':
+      rl.question('Enter cardholder name: ', async (cardholderName) => {
+          rl.question('Enter card number: ', async (cardNumber) => {
+            rl.question('Enter expiration date (MM/YY): ', async (expirationDate) => {
+              rl.question('Enter CVV: ', async (cvv) => {
+                const paymentData = {
+                  user: getCurrentUser(),
+                  cardholderName,
+                  cardNumber,
+                  expirationDate,
+                  cvv,
+                };
+
+                const newPayment = await paymentsController.createPayment(paymentData);
+                if (newPayment) {
+                  console.log('Payment information created successfully.');
+                } else {
+                  console.log('Error creating payment information.');
+                }
+
+                editAccountOptions();
+              });
+            });
+          });
+        });
+        break;
+      case '4':
       default:
         secondMenu();
     }
