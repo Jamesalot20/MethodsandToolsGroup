@@ -105,6 +105,7 @@ async function checkout(rl, callback) {
       }
 
       await product.save();
+      totalPrice += item.quantity * item.product.price;
     }
 
     // Clear the cart
