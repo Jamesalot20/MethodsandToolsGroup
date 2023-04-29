@@ -158,60 +158,11 @@ async function editShippingInfo() {
   });
   break;
       case '2':
-    if (!shippingAddresses.length) {
-      console.log('No shipping addresses available to edit.');
-      secondMenu();
-      break;
-    }
-
-    console.log('Select the shipping address to edit:');
-    shippingAddresses.forEach((address, index) => {
-      console.log(`${index + 1}. ${address.fullName}, ${address.addressLine1}, ${address.city}, ${address.state}, ${address.postalCode}, ${address.country}`);
-    });
-
-    rl.question('Enter the number of the shipping address you want to edit: ', async (selectedIndex) => {
-      const selectedAddress = shippingAddresses[selectedIndex - 1];
-
-      if (!selectedAddress) {
-        console.log('Invalid selection.');
-        secondMenu();
-        return;
-      }
-
-      console.log('\nEnter new values (leave blank to keep current value):');
-      rl.question(`Full name (${selectedAddress.fullName}): `, async (fullName) => {
-        rl.question(`Address line 1 (${selectedAddress.addressLine1}): `, async (addressLine1) => {
-          rl.question(`City (${selectedAddress.city}): `, async (city) => {
-            rl.question(`State (${selectedAddress.state}): `, async (state) => {
-              rl.question(`Postal code (${selectedAddress.postalCode}): `, async (postalCode) => {
-                rl.question(`Country (${selectedAddress.country}): `, async (country) => {
-                  const updatedShippingData = {
-                    fullName: fullName || selectedAddress.fullName,
-                    addressLine1: addressLine1 || selectedAddress.addressLine1,
-                    city: city || selectedAddress.city,
-                    state: state || selectedAddress.state,
-                    postalCode: postalCode || selectedAddress.postalCode,
-                    country: country || selectedAddress.country,
-                  };
-
-                  // Call the updateShipping function
-                  const updatedShipping = await shippingsController.updateShipping(selectedAddress._id, updatedShippingData);
-                  if (updatedShipping) {
-                    console.log('Shipping address updated successfully.');
-                    console.log(updatedShipping);
-                  } else {
-                    console.log('Error updating shipping address.');
-                  }
-
-                  secondMenu();
-                });
-              });
-            });
-          });
-        });
-      });
-    });
-    break;
+        // Choose the shipping address to edit
+        // Add a loop to handle user input and validation
+        // Then, edit the chosen shipping address
+        // You can reuse the code from the previous example to edit the shipping address
+        break;
       case '3':
       default:
         secondMenu();
