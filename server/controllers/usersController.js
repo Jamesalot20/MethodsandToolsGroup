@@ -1,7 +1,7 @@
 const User = require('../models/User');
 const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
-
+const { createShipping, getShippingByUser, updateShipping, deleteShipping } = require('./shippingsController');
 
 async function registerUser(rl, callback) {
   rl.question('Enter your email: ', async (email) => {
@@ -106,7 +106,51 @@ async function deleteUser(rl, mainMenu) {
     mainMenu();
   });
 }
+async function editShippingInfo(rl, callback) {
+  try {
+    const currentUser = getCurrentUser();
+    if (!currentUser) {
+      console.log('Please log in to edit your shipping information.');
+      callback();
+      return;
+    }
 
+    // Get the user's shipping information
+    const shippingInfo = await getShippingByUser(currentUser);
+
+    if (!shippingInfo) {
+      console.log('No shipping information found. Please add a new shipping address.');
+    } else {
+      console.log(`Current shipping address: ${shippingInfo.addressLine1}, ${shippingInfo.city}, ${shippingInfo.state}, ${shippingInfo.postalCode}, ${shippingInfo.country}`);
+    }
+
+    rl.question('Enter your new street address: ', async (street) => {
+      rl.question('Enter your new city: ', async (city) => {
+        rl.question('Enter your new state: ', async (state) => {
+          rl.question('Enter your new zip code: ', async (zipCode) => {
+            rl.question('Enter your new country: ', async (country) => {
+
+              if (shippingInfo) {
+                // Update the shipping information
+                const updatedShippingInfo = await updateShipping(currentUser, shippingInfo._id, { street, city, state, zipCode, country });
+                console.log('Shipping information updated successfully.');
+              } else {
+                // Create a new shipping address
+                const newShippingInfo = await createShipping(currentUser, { street, city, state, zipCode, country });
+                console.log('Shipping address added successfully.');
+              }
+
+              callback();
+            });
+          });
+        });
+      });
+    });
+  } catch (error) {
+    console.error('Server error.', error);
+    callback();
+  }
+}
 function getCurrentUser() {
   return currentUser;
 }
