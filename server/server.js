@@ -124,23 +124,39 @@ async function editShippingInfo() {
   rl.question('\nEnter your choice: ', async (choice) => {
     switch (choice) {
       case '1':
-        // Get user input for the new shipping address
-        // Example:
-        rl.question('Enter full name: ', async (fullName) => {
-          const shippingData = { fullName };
+  // Get user input for the new shipping address
+  rl.question('Enter full name: ', async (fullName) => {
+    rl.question('Enter address line 1: ', async (addressLine1) => {
+      rl.question('Enter city: ', async (city) => {
+        rl.question('Enter state: ', async (state) => {
+          rl.question('Enter postal code: ', async (postalCode) => {
+            rl.question('Enter country: ', async (country) => {
+              const shippingData = {
+                fullName,
+                addressLine1,
+                city,
+                state,
+                postalCode,
+                country,
+              };
 
-          // Add all the fields, then call the createShipping function
-          const newShipping = await shippingsController.createShipping(currentUser, shippingData);
-          if (newShipping) {
-            console.log('Shipping address created successfully.');
-            console.log(newShipping);
-          } else {
-            console.log('Error creating shipping address.');
-          }
+              // Call the createShipping function
+              const newShipping = await shippingsController.createShipping(currentUser, shippingData);
+              if (newShipping) {
+                console.log('Shipping address created successfully.');
+                console.log(newShipping);
+              } else {
+                console.log('Error creating shipping address.');
+              }
 
-          secondMenu();
+              secondMenu();
+            });
+          });
         });
-        break;
+      });
+    });
+  });
+  break;
       case '2':
         // Choose the shipping address to edit
         // Add a loop to handle user input and validation
