@@ -3,7 +3,7 @@ const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
 
 
-async function registerUser(rl, mainMenu) {
+async function registerUser(rl, callback) {
   rl.question('Enter your email: ', async (email) => {
     rl.question('Enter your password: ', async (password) => {
       try {
@@ -11,7 +11,7 @@ async function registerUser(rl, mainMenu) {
 
         if (existingUser) {
           console.log('User with this email already exists.');
-          mainMenu();
+          callback();
           return;
         }
 
@@ -29,12 +29,12 @@ async function registerUser(rl, mainMenu) {
       } catch (error) {
         console.error("Error in registerUser:", error);
       }
-      mainMenu();
+      callback();
     });
   });
 }
 
-async function loginUser(rl, mainMenu) {
+async function loginUser(rl, callback) {
   rl.question('Enter your email: ', async (email) => {
     rl.question('Enter your password: ', async (password) => {
       try {
@@ -42,7 +42,7 @@ async function loginUser(rl, mainMenu) {
 
         if (!user) {
           console.log('User not found.');
-          mainMenu();
+          callback();
           return;
         }
 
@@ -60,7 +60,7 @@ async function loginUser(rl, mainMenu) {
       } catch (error) {
         console.error('Server error.', error);
       }
-      mainMenu();
+      callback();
     });
   });
 }
@@ -75,10 +75,9 @@ async function logoutUser() {
   // To "log out" a user, simply remove the token from the client-side (e.g., delete it from local storage).
   currentUser = null;
   console.log('Logout successful.');
-  mainMenu();
 }
 
-async function deleteUser() {
+async function deleteUser(rl, mainMenu) {
   if (!currentUser) {
     console.log('You must be logged in to delete your account.');
     mainMenu();
@@ -108,10 +107,14 @@ async function deleteUser() {
   });
 }
 
+function getCurrentUser() {
+  return currentUser;
+}
+
 
 
 exports.registerUser = registerUser;
 exports.loginUser = loginUser;
 exports.logoutUser = logoutUser;
 exports.deleteUser = deleteUser;
-exports.currentUser = currentUser;
+exports.getCurrentUser = getCurrentUser;
