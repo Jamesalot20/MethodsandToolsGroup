@@ -34,7 +34,7 @@ async function registerUser(rl, callback) {
   });
 }
 
-async function loginUser(rl, callback, mainMenu) {
+async function loginUser(rl, callback, mainMenu, secondMenu) {
   rl.question('Enter your email: ', async (email) => {
     rl.question('Enter your password: ', async (password) => {
       try {
@@ -64,7 +64,8 @@ async function loginUser(rl, callback, mainMenu) {
       }
     });
   });
-}
+} 
+
 
 // ... Keep other functions like logoutUser and deleteUser as is, but modify them to work with the command-line interface
 
