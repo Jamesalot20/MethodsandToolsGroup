@@ -1,6 +1,9 @@
 const Cart = require('../models/Cart');
 const { getCurrentUser } = require('./usersController');
 const Product = require('../models/Product');
+const Order = require('../models/Order');
+const { createOrder } = require('./ordersController');
+
 async function getCartByUser(currentUser, rl, callback) {
   try {
     const currentUser = getCurrentUser();
@@ -114,6 +117,17 @@ async function checkout(rl, callback) {
 
   callback();
 }
+
+const order = new Order({
+  buyer: req.user.userId,
+  items: cart.items.map(item => ({
+    product: item.product._id,
+    quantity: item.quantity,
+    price: item.product.price,
+  })),
+  totalPrice: cart.totalCost,
+});
+await createOrder(req, res);
 
 module.exports = {
   getCartByUser,
