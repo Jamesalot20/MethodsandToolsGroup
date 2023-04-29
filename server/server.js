@@ -123,7 +123,13 @@ async function editAccountOptions() {
     console.log("Current shipping address(es):");
     console.log(shippingAddresses);
   }
-
+const paymentInformation = await paymentsController.getPaymentByUser(currentUser);
+  if (!paymentInformation) {
+    console.log("No payment information found for this user.");
+  } else {
+    console.log("Current payment information:");
+    console.log(paymentInformation);
+  }
   console.log('\nChoose an option:');
   console.log('1. Create a new shipping address');
   console.log('2. Edit an existing shipping address');
