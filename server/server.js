@@ -165,7 +165,8 @@ async function editAccountOptions() {
         // Then, edit the chosen shipping address
         // You can reuse the code from the previous example to edit the shipping address
         break;
-      rl.question('Enter cardholder name: ', async (cardholderName) => {
+      case '3':
+        rl.question('Enter cardholder name: ', async (cardholderName) => {
           rl.question('Enter card number: ', async (cardNumber) => {
             rl.question('Enter expiration date (MM/YY): ', async (expirationDate) => {
               rl.question('Enter CVV: ', async (cvv) => {
