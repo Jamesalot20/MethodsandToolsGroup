@@ -12,6 +12,17 @@ async function createPayment(paymentData) {
   }
 }
 
+async function getPaymentByUser(userId) {
+  try {
+    const paymentInfo = await Payment.findOne({ user: userId });
+    return paymentInfo;
+  } catch (error) {
+    console.error('Error retrieving payment information.', error);
+    return null;
+  }
+}
+
 module.exports = {
   createPayment,
+  getPaymentByUser,
 };
