@@ -25,7 +25,7 @@ function mainMenu() {
   console.log('7. Add item to cart');
   console.log('8. Remove item from cart');
   console.log('9. Quit');
-
+  console.log('10. Checkout');
   rl.question('\nEnter your choice: ', (choice) => {
     switch (choice) {
       case '1':
@@ -54,6 +54,9 @@ function mainMenu() {
         break;
       case '9':
         quit();
+        break;
+        case '10':
+        checkout(rl, mainMenu);
         break;
       default:
         console.log('Invalid choice. Please try again.\n');
