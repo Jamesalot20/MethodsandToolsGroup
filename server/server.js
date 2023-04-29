@@ -55,7 +55,7 @@ function mainMenu() {
       case '9':
         quit();
         break;
-        case '10':
+      case '10':
         checkout(rl, mainMenu);
         break;
       default:
