@@ -4,7 +4,7 @@ const connectToDB = require('./db');
 const { registerUser, loginUser, logoutUser, deleteUser, getCurrentUser } = require('./controllers/usersController');
 const { getProductsCLI } = require('./controllers/productsController');
 const { getCartByUser, addItemToCart, removeCartItem, checkout } = require('./controllers/cartsController');
-
+const ordersController = require('./controllers/ordersController'); // Added import for ordersController
 // Load environment variables
 dotenv.config();
 
