@@ -84,7 +84,8 @@ async function removeCartItem(rl, callback) {
 
 async function checkout(rl, callback) {
   try {
-    const cart = await Cart.findOne({ user: getCurrentUser()._id }).populate('items.product');
+    const user = getCurrentUser();
+    const cart = await Cart.findOne({ user: user._id }).populate('items.product');
 
     if (!cart || cart.items.length === 0) {
       console.log('Your cart is empty.');
@@ -111,23 +112,30 @@ async function checkout(rl, callback) {
     await cart.save();
 
     console.log('Checkout successful.');
+
+    // Create order
+    const order = new Order({
+      buyer: user._id,
+      items: cart.items.map(item => ({
+        product: item.product._id,
+        quantity: item.quantity,
+        price: item.product.price,
+      })),
+      totalPrice: cart.totalCost,
+    });
+
+    const req = { body: order };
+    const res = {
+      status: (code) => ({ json: (data) => console.log('Order created:', data) }),
+    };
+    await createOrder(req, res);
+
   } catch (error) {
     console.error('Server error.', error);
   }
 
   callback();
 }
-
-const order = new Order({
-  buyer: req.user.userId,
-  items: cart.items.map(item => ({
-    product: item.product._id,
-    quantity: item.quantity,
-    price: item.product.price,
-  })),
-  totalPrice: cart.totalCost,
-});
-await createOrder(req, res);
 
 module.exports = {
   getCartByUser,
