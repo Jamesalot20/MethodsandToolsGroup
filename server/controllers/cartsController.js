@@ -1,20 +1,12 @@
 const Cart = require('../models/Cart');
 const { getCurrentUser } = require('./usersController');
 
-<<<<<<< HEAD
 async function getCartByUser(currentUser, rl, callback) {
-=======
-async function getCartByUser(currentUser, rl, mainMenu) {
->>>>>>> 835ad95f42c6d604e99c7b224a467abed7645f4f
   try {
     const currentUser = getCurrentUser();
     if (!currentUser) {
       console.log('Please log in to view your cart.');
-<<<<<<< HEAD
       callback();
-=======
-      mainMenu();
->>>>>>> 835ad95f42c6d604e99c7b224a467abed7645f4f
       return;
     }
 
@@ -35,11 +27,7 @@ async function getCartByUser(currentUser, rl, mainMenu) {
   callback();
 }
 
-<<<<<<< HEAD
 async function addItemToCart(currentUser, rl, callback) { // <-- Changed this line
-=======
-async function addItemToCart(currentUser, rl, mainMenu) { // <-- Changed this line
->>>>>>> 835ad95f42c6d604e99c7b224a467abed7645f4f
   try {
     rl.question('Enter the product ID: ', async (productId) => {
       rl.question('Enter the quantity: ', async (quantity) => {
@@ -90,11 +78,7 @@ async function removeCartItem(rl, callback) {
     callback();
   }
 }
-async function checkout(rl, mainMenu) {
-  try {
-    const cart = await Cart.findOne({ user: getCurrentUser()._id }).populate('items.product');
 
-<<<<<<< HEAD
 async function checkout(rl, callback) {
   try {
     const cart = await Cart.findOne({ user: getCurrentUser()._id }).populate('items.product');
@@ -102,11 +86,6 @@ async function checkout(rl, callback) {
     if (!cart || cart.items.length === 0) {
       console.log('Your cart is empty.');
       callback();
-=======
-    if (!cart || cart.items.length === 0) {
-      console.log('Your cart is empty.');
-      mainMenu();
->>>>>>> 835ad95f42c6d604e99c7b224a467abed7645f4f
       return;
     }
 
@@ -117,11 +96,7 @@ async function checkout(rl, callback) {
 
       if (product.stock < 0) {
         console.log(`Insufficient stock for ${product.name}. Only ${product.stock + item.quantity} left.`);
-<<<<<<< HEAD
         callback();
-=======
-        mainMenu();
->>>>>>> 835ad95f42c6d604e99c7b224a467abed7645f4f
         return;
       }
 
@@ -137,17 +112,12 @@ async function checkout(rl, callback) {
     console.error('Server error.', error);
   }
 
-<<<<<<< HEAD
   callback();
 }
 
-=======
-  mainMenu();
-}
->>>>>>> 835ad95f42c6d604e99c7b224a467abed7645f4f
 module.exports = {
   getCartByUser,
   addItemToCart,
   removeCartItem,
   checkout
-};
+}
