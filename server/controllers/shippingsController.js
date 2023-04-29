@@ -1,8 +1,8 @@
 const Shipping = require('../models/Shipping');
 
-exports.createShipping = async (req, res) => {
+exports.createShipping = async (user, shippingData) => {
   try {
-    const { user, fullName, addressLine1, city, state, postalCode, country } = req.body;
+    const { fullName, addressLine1, city, state, postalCode, country } = shippingData;
 
     const newShipping = new Shipping({
       user,
@@ -15,64 +15,63 @@ exports.createShipping = async (req, res) => {
     });
 
     await newShipping.save();
-    res.status(201).json({ message: 'Shipping address created successfully.', newShipping });
-
+    return newShipping;
   } catch (error) {
     console.error(error);
-    res.status(500).json({ message: 'Server error.', error: error.message });
+    throw error;
   }
 };
 
-exports.getShippingByUser = async (req, res) => {
+exports.getShippingByUser = async (user) => {
   try {
-    const shippingAddresses = await Shipping.find({ user: req.user._id });
+    const shippingAddresses = await Shipping.find({ user: user._id });
 
     if (!shippingAddresses) {
-      res.status(404).json({ message: 'No shipping addresses found for this user.' });
+      return null;
     } else {
-      res.status(200).json(shippingAddresses);
+      return shippingAddresses;
     }
 
   } catch (error) {
-    res.status(500).json({ message: 'Server error.' });
+    console.error(error);
+    throw error;
   }
 };
 
-exports.updateShipping = async (req, res) => {
+exports.updateShipping = async (user, shippingId, shippingData) => {
   try {
-    const { address, city, state, zip } = req.body;
-    const shippingId = req.params.shippingId;
+    const { address, city, state, zip } = shippingData;
 
     const updatedShipping = await Shipping.findOneAndUpdate(
-      { _id: shippingId, user: req.user._id },
+      { _id: shippingId, user: user._id },
       { address, city, state, zip },
       { new: true }
     );
 
     if (!updatedShipping) {
-      res.status(404).json({ message: 'Shipping address not found or not owned by the user.' });
+      return null;
     } else {
-      res.status(200).json({ message: 'Shipping address updated successfully.', updatedShipping });
+      return updatedShipping;
     }
 
   } catch (error) {
-    res.status(500).json({ message: 'Server error.' });
+    console.error(error);
+    throw error;
   }
 };
 
-exports.deleteShipping = async (req, res) => {
+exports.deleteShipping = async (user, shippingId) => {
   try {
-    const shippingId = req.params.shippingId;
-
-    const deletedShipping = await Shipping.findOneAndDelete({ _id: shippingId, user: req.user._id });
+    const deletedShipping = await Shipping.findOneAndDelete({ _id: shippingId, user: user._id });
 
     if (!deletedShipping) {
-      res.status(404).json({ message: 'Shipping address not found or not owned by the user.' });
+      return null;
     } else {
-      res.status(200).json({ message: 'Shipping address deleted successfully.' });
+      return deletedShipping;
     }
 
   } catch (error) {
-    res.status(500).json({ message: 'Server error.' });
+    console.error(error);
+    throw error;
   }
 };
