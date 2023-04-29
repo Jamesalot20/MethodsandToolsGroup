@@ -67,7 +67,7 @@ async function loginUser(rl, callback) {
 
 // ... Keep other functions like logoutUser and deleteUser as is, but modify them to work with the command-line interface
 
-let currentUser = null; // global variable to store the current user's information
+
 
 
 async function logoutUser() {
@@ -106,15 +106,26 @@ async function deleteUser(rl, mainMenu) {
     mainMenu();
   });
 }
+<<<<<<< HEAD
 
 function getCurrentUser() {
   return currentUser;
 }
 
+=======
+// Add the following function to usersController.js
+function getCurrentUser() {
+  return currentUser;
+}
+>>>>>>> 835ad95f42c6d604e99c7b224a467abed7645f4f
 
 
 exports.registerUser = registerUser;
 exports.loginUser = loginUser;
 exports.logoutUser = logoutUser;
 exports.deleteUser = deleteUser;
+<<<<<<< HEAD
 exports.getCurrentUser = getCurrentUser;
+=======
+exports.getCurrentUser = getCurrentUser;
+>>>>>>> 835ad95f42c6d604e99c7b224a467abed7645f4f

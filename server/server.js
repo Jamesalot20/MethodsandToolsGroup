@@ -3,7 +3,7 @@ const dotenv = require('dotenv');
 const connectToDB = require('./db');
 const { registerUser, loginUser, logoutUser, deleteUser, getCurrentUser } = require('./controllers/usersController');
 const { getProductsCLI } = require('./controllers/productsController');
-const { getCartByUser, addItemToCart, removeCartItem } = require('./controllers/cartsController');
+const { getCartByUser, addItemToCart, removeCartItem, checkout } = require('./controllers/cartsController');
 
 // Load environment variables
 dotenv.config();
@@ -79,10 +79,23 @@ function secondMenu() {
 function mainMenu() {
   console.log('\nWelcome to TechTonic');
   console.log('Please choose an option:');
+<<<<<<< HEAD
   console.log('1. Login');
   console.log('2. Create an Account');
   console.log('3. Exit Program');
 
+=======
+  console.log('1. Register');
+  console.log('2. Login');
+  console.log('3. Logout');
+  console.log('4. Delete account');
+  console.log('5. View products');
+  console.log('6. View cart');
+  console.log('7. Add item to cart');
+  console.log('8. Remove item from cart');
+  console.log('9. Quit');
+  console.log('10. Checkout');
+>>>>>>> 835ad95f42c6d604e99c7b224a467abed7645f4f
   rl.question('\nEnter your choice: ', (choice) => {
     switch (choice) {
       case '1':
@@ -92,7 +105,31 @@ function mainMenu() {
         registerUser(rl, secondMenu);
         break;
       case '3':
+<<<<<<< HEAD
+=======
+        logoutUser();
+        break;
+      case '4':
+        deleteUser();
+        break;
+      case '5':
+        getProductsCLI(rl, mainMenu);
+        break;
+      case '6':
+        getCartByUser(getCurrentUser(), rl, mainMenu); // Remove getCurrentUser() from here
+        break;
+      case '7':
+        addItemToCart(getCurrentUser(), rl, mainMenu); // Remove getCurrentUser() from here
+        break;
+      case '8':
+        removeCartItem(getCurrentUser(), rl, mainMenu); // Remove getCurrentUser() from here
+        break;
+      case '9':
+>>>>>>> 835ad95f42c6d604e99c7b224a467abed7645f4f
         quit();
+        break;
+      case '10':
+        checkout(rl, mainMenu);
         break;
       default:
         console.log('Invalid choice. Please try again.\n');
