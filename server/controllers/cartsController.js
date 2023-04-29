@@ -78,9 +78,44 @@ async function removeCartItem(rl, mainMenu) {
     mainMenu();
   }
 }
+async function checkout(rl, mainMenu) {
+  try {
+    const cart = await Cart.findOne({ user: getCurrentUser()._id }).populate('items.product');
 
+    if (!cart || cart.items.length === 0) {
+      console.log('Your cart is empty.');
+      mainMenu();
+      return;
+    }
+
+    // Update the stock of the products
+    for (const item of cart.items) {
+      const product = await Product.findById(item.product._id);
+      product.stock -= item.quantity;
+
+      if (product.stock < 0) {
+        console.log(`Insufficient stock for ${product.name}. Only ${product.stock + item.quantity} left.`);
+        mainMenu();
+        return;
+      }
+
+      await product.save();
+    }
+
+    // Clear the cart
+    cart.items = [];
+    await cart.save();
+
+    console.log('Checkout successful.');
+  } catch (error) {
+    console.error('Server error.', error);
+  }
+
+  mainMenu();
+}
 module.exports = {
   getCartByUser,
   addItemToCart,
   removeCartItem,
+  checkout
 };
