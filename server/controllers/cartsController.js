@@ -3,10 +3,17 @@ const { getCurrentUser } = require('./usersController');
 
 async function getCartByUser(rl, mainMenu) {
   try {
-    let cart = await Cart.findOne({ user: getCurrentUser()._id }).populate('items.product');
+    const currentUser = getCurrentUser();
+    if (!currentUser) {
+      console.log('Please log in to view your cart.');
+      mainMenu();
+      return;
+    }
+
+    let cart = await Cart.findOne({ user: currentUser._id }).populate('items.product');
 
     if (!cart) {
-      cart = new Cart({ user: getCurrentUser()._id, items: [] });
+      cart = new Cart({ user: currentUser._id, items: [] });
     }
 
     console.log('Cart items:');
