@@ -94,6 +94,7 @@ async function checkout(rl, callback) {
     }
 
     // Update the stock of the products
+    let totalPrice = 0;
     for (const item of cart.items) {
       const product = await Product.findById(item.product._id);
       product.stock -= item.quantity;
@@ -108,12 +109,6 @@ async function checkout(rl, callback) {
       totalPrice += item.quantity * item.product.price;
     }
 
-    // Clear the cart
-    cart.items = [];
-    await cart.save();
-
-    console.log('Checkout successful.');
-
     // Create order
     const order = new Order({
       buyer: user._id,
@@ -122,7 +117,7 @@ async function checkout(rl, callback) {
         quantity: item.quantity,
         price: item.product.price,
       })),
-      totalPrice: cart.totalCost,
+      totalPrice: totalPrice,
     });
 
     const req = { body: order };
@@ -131,12 +126,19 @@ async function checkout(rl, callback) {
     };
     await createOrder(req, res);
 
+    // Clear the cart
+    cart.items = [];
+    await cart.save();
+
+    console.log('Checkout successful.');
+
   } catch (error) {
     console.error('Server error.', error);
   }
 
   callback();
 }
+
 
 module.exports = {
   getCartByUser,
