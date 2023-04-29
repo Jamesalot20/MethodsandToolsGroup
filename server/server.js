@@ -90,8 +90,15 @@ function mainMenu() {
   rl.question('\nEnter your choice: ', (choice) => {
     switch (choice) {
       case '1':
-        loginUser(rl, secondMenu);
-        break;
+        loginUser(rl, (err, menu) => {
+          if (err) {
+            console.error(err);
+            mainMenu();
+          } else {
+            menu();
+          }
+        }, mainMenu);
+        break;      
       case '2':
         registerUser(rl, secondMenu);
         break;
