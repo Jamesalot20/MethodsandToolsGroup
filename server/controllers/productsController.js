@@ -46,7 +46,7 @@ async function getProductsCLI(rl, callback) {
         } else {
           console.log('Products:');
           products.forEach((product) => {
-            console.log(`- ${product.name} (Category: ${product.category})`);
+            console.log(`- ${product.name} (Category: ${product.category}) (ID: ${product._id})`);
           });
         }
       } catch (error) {
@@ -57,5 +57,6 @@ async function getProductsCLI(rl, callback) {
     });
   });
 }
+
 
 exports.getProductsCLI = getProductsCLI;
