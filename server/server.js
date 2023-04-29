@@ -52,13 +52,13 @@ function secondMenu() {
   rl.question('\nEnter Your Choice: ', (choice) => {
     switch(choice) {
       case '1':
-        getProductsCLI(rl, secondMenu());
+        getProductsCLI(rl, secondMenu);
         break;
       case '2':
         cartMenu();
         break;
       case '3':
-        checkout(rl, secondMenu());
+        checkout(rl, secondMenu);
         break;
       case '4':
         break;
