@@ -58,6 +58,7 @@ function secondMenu() {
         cartMenu();
         break;
       case '3':
+        checkout(rl, secondMenu());
         break;
       case '4':
         break;
