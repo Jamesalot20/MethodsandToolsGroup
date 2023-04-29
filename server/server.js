@@ -43,13 +43,12 @@ function secondMenu() {
   console.log('1. View All Items');
   console.log('2. Cart Information');
   console.log('3. Checkout');
-  console.log('4. Add an Order');
-  console.log('5. View Order History');
-  console.log('6. Edit Account');
-  console.log('7. Delete Account');
-  console.log('8. Logout');
+  console.log('4. View Order History');
+  console.log('5. Edit Account');
+  console.log('6. Delete Account');
+  console.log('7. Logout');
 
-  rl.question('\nEnter Your Choice: ', (choice) => {
+  rl.question('\nEnter Your Choice: ', async (choice) => {
     switch(choice) {
       case '1':
         getProductsCLI(rl, secondMenu);
@@ -61,15 +60,17 @@ function secondMenu() {
         checkout(rl, secondMenu);
         break;
       case '4':
+        await ordersController.getOrdersByUser({ user: { userId: getCurrentUser() } }, { // Mocked req object
+         status: (code) => ({ json: (data) => console.log(data) }), // Mocked res object
+          });
+        secondMenu();
         break;
       case '5':
         break;
       case '6':
-        break;
-      case '7':
         deleteUser();
         break;
-      case '8':
+      case '7':
         logoutUser();
         mainMenu();
         break;
