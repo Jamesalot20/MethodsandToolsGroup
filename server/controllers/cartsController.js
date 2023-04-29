@@ -1,6 +1,6 @@
 const Cart = require('../models/Cart');
 const { getCurrentUser } = require('./usersController');
-
+const Product = require('../models/Product');
 async function getCartByUser(currentUser, rl, callback) {
   try {
     const currentUser = getCurrentUser();
