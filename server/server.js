@@ -71,7 +71,7 @@ function secondMenu() {
         editAccountOptions();
         break;
       case '6':
-        deleteUser();
+        deleteUser(r1, secondMenu);
         break;
       case '7':
         logoutUser();
